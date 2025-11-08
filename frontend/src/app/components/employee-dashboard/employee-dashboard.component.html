@@ -1,0 +1,180 @@
+<div class="grid lg:grid-cols-2 gap-6">
+  <div class="card p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-semibold">Expense Report</h2>
+      <button class="text-sm text-brand-500" type="button" (click)="resetReportForm()" *ngIf="editingReportId">Clear</button>
+    </div>
+    <form [formGroup]="reportForm" class="space-y-4" (ngSubmit)="submitReport()">
+      <div class="grid md:grid-cols-2 gap-4">
+        <label class="text-sm font-medium text-slate-600">Title
+          <input type="text" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2" formControlName="title">
+        </label>
+        <label class="text-sm font-medium text-slate-600">Employee
+          <input type="text" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2" formControlName="employeeName">
+        </label>
+      </div>
+      <div>
+        <label class="text-sm font-medium text-slate-600">Currency
+          <input type="text" maxlength="3" class="mt-1 w-32 rounded-lg border border-slate-200 px-3 py-2 uppercase" formControlName="currency">
+        </label>
+      </div>
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <p class="text-sm font-semibold text-slate-600">Items</p>
+          <button type="button" class="btn-secondary text-sm" (click)="addItem()">Add Item</button>
+        </div>
+        <div *ngFor="let item of items.controls; let i = index" [formGroup]="item" class="border border-slate-100 rounded-lg p-4 space-y-3 bg-slate-50">
+          <div class="grid md:grid-cols-3 gap-3">
+            <label class="text-sm text-slate-600">Date
+              <input type="date" formControlName="txDate" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2">
+            </label>
+            <label class="text-sm text-slate-600">Amount
+              <input type="number" step="0.01" formControlName="amount" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2">
+            </label>
+            <label class="text-sm text-slate-600">Currency
+              <input type="text" maxlength="3" formControlName="currency" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 uppercase">
+            </label>
+          </div>
+          <div class="grid md:grid-cols-2 gap-3">
+            <label class="text-sm text-slate-600">Category
+              <select formControlName="category" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2">
+                <option value="" disabled>Select</option>
+                <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+              </select>
+            </label>
+            <label class="text-sm text-slate-600">Cost Center
+              <select formControlName="costCenter" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2">
+                <option value="" disabled>Select</option>
+                <option *ngFor="let cc of costCenters" [value]="cc">{{ cc }}</option>
+              </select>
+            </label>
+          </div>
+          <label class="text-sm text-slate-600">Description
+            <input type="text" formControlName="description" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2" placeholder="Taxi from airport">
+          </label>
+          <div class="flex flex-wrap items-center gap-3">
+            <input type="file" (change)="uploadReceipt($event, i)">
+            <span class="text-xs text-slate-500" *ngIf="item.get('attachmentPath')?.value">{{ item.get('attachmentPath')?.value }}</span>
+            <button type="button" class="text-xs text-rose-500" (click)="removeItem(i)" *ngIf="items.length > 1">Remove</button>
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary w-full" type="submit">{{ editingReportId ? 'Update Report' : 'Save Report' }}</button>
+    </form>
+  </div>
+
+  <div class="card p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-semibold">Purchase Request</h2>
+      <button class="text-sm text-brand-500" type="button" (click)="resetPurchaseForm()" *ngIf="editingPurchaseId">Clear</button>
+    </div>
+    <form [formGroup]="purchaseForm" class="space-y-4" (ngSubmit)="submitPurchase()">
+      <div class="grid md:grid-cols-2 gap-4">
+        <label class="text-sm text-slate-600">Employee
+          <input type="text" formControlName="employeeName" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2">
+        </label>
+        <label class="text-sm text-slate-600">Vendor
+          <input type="text" formControlName="vendor" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2">
+        </label>
+      </div>
+      <label class="text-sm text-slate-600">Total
+        <input type="number" step="0.01" formControlName="total" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2">
+      </label>
+      <label class="text-sm text-slate-600">Justification
+        <textarea formControlName="justification" rows="3" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2"></textarea>
+      </label>
+      <label class="text-sm text-slate-600">Attachment Path
+        <input type="text" formControlName="attachmentPath" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2" placeholder="Upload via expense form">
+      </label>
+      <button class="btn-primary w-full" type="submit">{{ editingPurchaseId ? 'Update Request' : 'Save Request' }}</button>
+    </form>
+  </div>
+</div>
+
+<div class="grid lg:grid-cols-2 gap-6 mt-6">
+  <div class="card p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold">Expense Reports</h3>
+      <span class="text-sm text-slate-500">{{ reports.length }} total</span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="text-left text-slate-500">
+        <tr>
+          <th class="py-2">Title</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let report of reports" class="border-t border-slate-100">
+          <td class="py-2">
+            <p class="font-medium text-slate-900">{{ report.title }}</p>
+            <p class="text-xs text-slate-500">{{ report.employeeName }}</p>
+          </td>
+          <td>{{ report.total | currency: report.currency }}</td>
+          <td>
+            <span class="px-2 py-1 rounded-full text-xs" [ngClass]="{
+              'bg-slate-100 text-slate-700': report.status === 'DRAFT',
+              'bg-amber-100 text-amber-700': report.status === 'SUBMITTED',
+              'bg-rose-100 text-rose-700': report.status === 'RETURNED',
+              'bg-emerald-100 text-emerald-700': report.status === 'APPROVED',
+              'bg-brand-100 text-brand-600': report.status === 'PAID'
+            }">{{ report.status }}</span>
+          </td>
+          <td class="flex gap-2 py-2">
+            <button class="text-xs text-brand-500" (click)="editReport(report)" type="button">Edit</button>
+            <button class="text-xs text-emerald-600" type="button"
+                    [disabled]="!(report.status === 'DRAFT' || report.status === 'RETURNED')"
+                    (click)="sendReport(report)">Submit</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold">Purchase Requests</h3>
+      <span class="text-sm text-slate-500">{{ purchases.length }} total</span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="text-left text-slate-500">
+        <tr>
+          <th class="py-2">Vendor</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let request of purchases" class="border-t border-slate-100">
+          <td class="py-2">
+            <p class="font-medium text-slate-900">{{ request.vendor }}</p>
+            <p class="text-xs text-slate-500">{{ request.employeeName }}</p>
+          </td>
+          <td>{{ request.total | currency:'USD':'symbol':'1.0-2' }}</td>
+          <td>
+            <span class="px-2 py-1 rounded-full text-xs" [ngClass]="{
+              'bg-slate-100 text-slate-700': request.status === 'DRAFT',
+              'bg-amber-100 text-amber-700': request.status === 'SUBMITTED',
+              'bg-rose-100 text-rose-700': request.status === 'RETURNED',
+              'bg-emerald-100 text-emerald-700': request.status === 'APPROVED',
+              'bg-brand-100 text-brand-600': request.status === 'PAID'
+            }">{{ request.status }}</span>
+          </td>
+          <td class="flex gap-2 py-2">
+            <button class="text-xs text-brand-500" (click)="editPurchase(request)" type="button">Edit</button>
+            <button class="text-xs text-emerald-600" type="button"
+                    [disabled]="!(request.status === 'DRAFT' || request.status === 'RETURNED')"
+                    (click)="sendPurchase(request)">Submit</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

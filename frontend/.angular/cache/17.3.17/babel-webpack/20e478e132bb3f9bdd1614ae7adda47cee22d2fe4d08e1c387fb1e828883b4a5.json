@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const ROLE_LABELS = {\n  employee: 'Employee',\n  manager: 'Manager',\n  finance: 'Finance'\n};","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

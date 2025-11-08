@@ -1,0 +1,11 @@
+ALTER TABLE expense_reports
+    ALTER COLUMN id TYPE BIGINT
+    USING id::BIGINT;
+
+ALTER TABLE expense_items
+    ALTER COLUMN id TYPE BIGINT
+    USING id::BIGINT;
+
+ALTER TABLE purchase_requests
+    ALTER COLUMN id TYPE BIGINT
+    USING id::BIGINT;

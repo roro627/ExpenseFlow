@@ -1,0 +1,104 @@
+<div class="grid gap-6">
+  <section class="card p-6">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div>
+        <h2 class="text-lg font-semibold">Expense Reports</h2>
+        <p class="text-sm text-slate-500">Approve payments and export history</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="btn-secondary" type="button" (click)="exportCsv()">Export CSV</button>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="text-left text-slate-500">
+        <tr>
+          <th class="py-2">Title</th>
+          <th>Employee</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let report of reports" class="border-t border-slate-100">
+          <td class="py-2">{{ report.title }}</td>
+          <td>{{ report.employeeName }}</td>
+          <td>{{ report.total | currency: report.currency }}</td>
+          <td>{{ report.status }}</td>
+          <td class="text-right">
+            <button class="btn-primary text-xs" type="button" *ngIf="report.status === 'APPROVED'" (click)="markReportPaid(report)">Mark Paid</button>
+            <span *ngIf="report.status === 'PAID'" class="text-emerald-600 text-sm">Paid {{ report.paidAt | date:'short' }}</span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card p-6">
+    <h2 class="text-lg font-semibold mb-4">Purchase Requests</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="text-left text-slate-500">
+        <tr>
+          <th class="py-2">Vendor</th>
+          <th>Employee</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let request of purchases" class="border-t border-slate-100">
+          <td class="py-2">{{ request.vendor }}</td>
+          <td>{{ request.employeeName }}</td>
+          <td>{{ request.total | currency:'USD':'symbol':'1.0-2' }}</td>
+          <td>{{ request.status }}</td>
+          <td class="text-right">
+            <button class="btn-primary text-xs" type="button" *ngIf="request.status === 'APPROVED'" (click)="markPurchasePaid(request)">Mark Paid</button>
+            <span *ngIf="request.status === 'PAID'" class="text-emerald-600 text-sm">Paid {{ request.paidAt | date:'short' }}</span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card p-6">
+    <h2 class="text-lg font-semibold mb-4">Categories & Cost Centers</h2>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-sm font-semibold text-slate-600 mb-2">Categories</p>
+        <div class="flex gap-2 mb-3">
+          <input type="text" [(ngModel)]="newCategory" placeholder="Add category"
+                 class="flex-1 rounded-lg border border-slate-200 px-3 py-2">
+          <button class="btn-secondary" type="button" (click)="addCategory()">Add</button>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span *ngFor="let cat of categories" class="px-3 py-1 rounded-full bg-slate-100 text-sm flex items-center gap-2">
+            {{ cat }}
+            <button type="button" class="text-rose-500" (click)="removeCategory(cat)">×</button>
+          </span>
+        </div>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-slate-600 mb-2">Cost Centers</p>
+        <div class="flex gap-2 mb-3">
+          <input type="text" [(ngModel)]="newCostCenter" placeholder="Add cost center"
+                 class="flex-1 rounded-lg border border-slate-200 px-3 py-2">
+          <button class="btn-secondary" type="button" (click)="addCostCenter()">Add</button>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span *ngFor="let cc of costCenters" class="px-3 py-1 rounded-full bg-slate-100 text-sm flex items-center gap-2">
+            {{ cc }}
+            <button type="button" class="text-rose-500" (click)="removeCostCenter(cc)">×</button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 flex justify-end">
+      <button class="btn-primary" type="button" (click)="saveSettings()">Save Settings</button>
+    </div>
+  </section>
+</div>

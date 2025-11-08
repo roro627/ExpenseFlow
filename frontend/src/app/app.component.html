@@ -1,0 +1,42 @@
+<div class="min-h-screen bg-slate-50 flex flex-col">
+  <header class="bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="h-10 w-10 rounded-xl bg-brand-500 text-white flex items-center justify-center font-bold">EF</div>
+        <div>
+          <p class="text-lg font-semibold text-slate-900">ExpenseFlow</p>
+          <p class="text-sm text-slate-500">Track, approve, reimburse</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2" *ngIf="role$ | async as role; else roleChooser">
+        <nav class="hidden md:flex gap-2">
+          <button type="button"
+            *ngFor="let r of roles"
+            class="px-3 py-2 rounded-lg text-sm font-medium"
+            [ngClass]="r === role ? 'bg-brand-500 text-white' : 'text-slate-600 hover:bg-slate-100'"
+            (click)="selectRole(r)">
+            {{ labels[r] }}
+          </button>
+        </nav>
+        <span class="text-sm text-slate-500">Active role: <strong class="text-slate-900">{{ labels[role] }}</strong></span>
+        <button class="btn-secondary text-sm" type="button" (click)="openRoleSelector()">Change</button>
+      </div>
+      <ng-template #roleChooser>
+        <a routerLink="/role" class="btn-primary text-sm">Choose Role</a>
+      </ng-template>
+    </div>
+  </header>
+
+  <ng-container *ngIf="message$ | async as message">
+    <div [ngClass]="message.type === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'"
+         class="border-b border-slate-200 text-sm py-2 text-center">
+      {{ message.text }}
+    </div>
+  </ng-container>
+
+  <main class="flex-1">
+    <div class="max-w-7xl mx-auto p-4">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
