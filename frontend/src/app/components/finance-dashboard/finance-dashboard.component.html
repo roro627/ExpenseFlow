@@ -1,104 +1,166 @@
-<div class="grid gap-6">
-  <section class="card p-6">
-    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-      <div>
-        <h2 class="text-lg font-semibold">Expense Reports</h2>
-        <p class="text-sm text-slate-500">Approve payments and export history</p>
-      </div>
-      <div class="flex gap-2">
-        <button class="btn-secondary" type="button" (click)="exportCsv()">Export CSV</button>
+<div class="space-y-8">
+  <!-- Expense Reports Section -->
+  <section class="card overflow-hidden">
+    <div class="p-6 sm:p-8 border-b border-slate-100">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-900">Expense Reports</h2>
+          <p class="text-slate-600 mt-1">Process payments and approve reimbursements</p>
+        </div>
+        <button class="btn-secondary text-sm px-4 py-2 whitespace-nowrap" type="button" (click)="exportCsv()">
+          <span class="mr-2">↓</span> Export CSV
+        </button>
       </div>
     </div>
+
     <div class="overflow-x-auto">
-      <table class="min-w-full text-sm">
-        <thead class="text-left text-slate-500">
-        <tr>
-          <th class="py-2">Title</th>
-          <th>Employee</th>
-          <th>Total</th>
-          <th>Status</th>
-          <th></th>
-        </tr>
+      <table class="w-full">
+        <thead class="bg-slate-50 border-b border-slate-100">
+          <tr>
+            <th class="text-left px-6 py-4 font-semibold text-slate-700 text-sm">Title</th>
+            <th class="text-left px-6 py-4 font-semibold text-slate-700 text-sm">Employee</th>
+            <th class="text-left px-6 py-4 font-semibold text-slate-700 text-sm">Amount</th>
+            <th class="text-left px-6 py-4 font-semibold text-slate-700 text-sm">Status</th>
+            <th class="text-left px-6 py-4 font-semibold text-slate-700 text-sm">Actions</th>
+          </tr>
         </thead>
-        <tbody>
-        <tr *ngFor="let report of reports" class="border-t border-slate-100">
-          <td class="py-2">{{ report.title }}</td>
-          <td>{{ report.employeeName }}</td>
-          <td>{{ report.total | currency: report.currency }}</td>
-          <td>{{ report.status }}</td>
-          <td class="text-right">
-            <button class="btn-primary text-xs" type="button" *ngIf="report.status === 'APPROVED'" (click)="markReportPaid(report)">Mark Paid</button>
-            <span *ngIf="report.status === 'PAID'" class="text-emerald-600 text-sm">Paid {{ report.paidAt | date:'short' }}</span>
-          </td>
-        </tr>
+        <tbody class="divide-y divide-slate-100">
+          <tr *ngFor="let report of reports" class="hover:bg-slate-50 transition">
+            <td class="px-6 py-4 text-sm font-semibold text-slate-900">{{ report.title }}</td>
+            <td class="px-6 py-4 text-sm text-slate-600">{{ report.employeeName }}</td>
+            <td class="px-6 py-4 text-sm font-semibold text-slate-900">{{ report.total | currency: report.currency }}</td>
+            <td class="px-6 py-4 text-sm">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold" [ngClass]="{
+                'bg-slate-100 text-slate-700': report.status === 'DRAFT',
+                'bg-amber-100 text-amber-700': report.status === 'SUBMITTED',
+                'bg-rose-100 text-rose-700': report.status === 'RETURNED',
+                'bg-emerald-100 text-emerald-700': report.status === 'APPROVED',
+                'bg-blue-100 text-blue-700': report.status === 'PAID'
+              }">{{ report.status }}</span>
+            </td>
+            <td class="px-6 py-4 text-sm">
+              <button class="btn-primary text-xs px-3 py-1.5" type="button" *ngIf="report.status === 'APPROVED'" (click)="markReportPaid(report)">Mark Paid</button>
+              <span *ngIf="report.status === 'PAID'" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
+                ✓ Paid {{ report.paidAt | date:'short' }}
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="reports.length === 0">
+            <td colspan="5" class="px-6 py-8 text-center text-slate-500">No expense reports available.</td>
+          </tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <section class="card p-6">
-    <h2 class="text-lg font-semibold mb-4">Purchase Requests</h2>
+  <!-- Purchase Requests Section -->
+  <section class="card overflow-hidden">
+    <div class="p-6 sm:p-8 border-b border-slate-100">
+      <h2 class="text-2xl font-bold text-slate-900">Purchase Requests</h2>
+      <p class="text-slate-600 mt-1">Track vendor payments and approvals</p>
+    </div>
+
     <div class="overflow-x-auto">
-      <table class="min-w-full text-sm">
-        <thead class="text-left text-slate-500">
-        <tr>
-          <th class="py-2">Vendor</th>
-          <th>Employee</th>
-          <th>Total</th>
-          <th>Status</th>
-          <th></th>
-        </tr>
+      <table class="w-full">
+        <thead class="bg-slate-50 border-b border-slate-100">
+          <tr>
+            <th class="text-left px-6 py-4 font-semibold text-slate-700 text-sm">Vendor</th>
+            <th class="text-left px-6 py-4 font-semibold text-slate-700 text-sm">Employee</th>
+            <th class="text-left px-6 py-4 font-semibold text-slate-700 text-sm">Amount</th>
+            <th class="text-left px-6 py-4 font-semibold text-slate-700 text-sm">Status</th>
+            <th class="text-left px-6 py-4 font-semibold text-slate-700 text-sm">Actions</th>
+          </tr>
         </thead>
-        <tbody>
-        <tr *ngFor="let request of purchases" class="border-t border-slate-100">
-          <td class="py-2">{{ request.vendor }}</td>
-          <td>{{ request.employeeName }}</td>
-          <td>{{ request.total | currency:'USD':'symbol':'1.0-2' }}</td>
-          <td>{{ request.status }}</td>
-          <td class="text-right">
-            <button class="btn-primary text-xs" type="button" *ngIf="request.status === 'APPROVED'" (click)="markPurchasePaid(request)">Mark Paid</button>
-            <span *ngIf="request.status === 'PAID'" class="text-emerald-600 text-sm">Paid {{ request.paidAt | date:'short' }}</span>
-          </td>
-        </tr>
+        <tbody class="divide-y divide-slate-100">
+          <tr *ngFor="let request of purchases" class="hover:bg-slate-50 transition">
+            <td class="px-6 py-4 text-sm font-semibold text-slate-900">{{ request.vendor }}</td>
+            <td class="px-6 py-4 text-sm text-slate-600">{{ request.employeeName }}</td>
+            <td class="px-6 py-4 text-sm font-semibold text-slate-900">{{ request.total | currency:'USD':'symbol':'1.0-2' }}</td>
+            <td class="px-6 py-4 text-sm">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold" [ngClass]="{
+                'bg-slate-100 text-slate-700': request.status === 'DRAFT',
+                'bg-amber-100 text-amber-700': request.status === 'SUBMITTED',
+                'bg-rose-100 text-rose-700': request.status === 'RETURNED',
+                'bg-emerald-100 text-emerald-700': request.status === 'APPROVED',
+                'bg-blue-100 text-blue-700': request.status === 'PAID'
+              }">{{ request.status }}</span>
+            </td>
+            <td class="px-6 py-4 text-sm">
+              <button class="btn-primary text-xs px-3 py-1.5" type="button" *ngIf="request.status === 'APPROVED'" (click)="markPurchasePaid(request)">Mark Paid</button>
+              <span *ngIf="request.status === 'PAID'" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
+                ✓ Paid {{ request.paidAt | date:'short' }}
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="purchases.length === 0">
+            <td colspan="5" class="px-6 py-8 text-center text-slate-500">No purchase requests available.</td>
+          </tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <section class="card p-6">
-    <h2 class="text-lg font-semibold mb-4">Categories & Cost Centers</h2>
-    <div class="grid md:grid-cols-2 gap-4">
+  <!-- Categories & Cost Centers Configuration -->
+  <section class="card p-6 sm:p-8">
+    <h2 class="text-2xl font-bold text-slate-900 mb-6">Settings & Configuration</h2>
+    
+    <div class="grid sm:grid-cols-2 gap-8">
+      <!-- Categories -->
       <div>
-        <p class="text-sm font-semibold text-slate-600 mb-2">Categories</p>
-        <div class="flex gap-2 mb-3">
-          <input type="text" [(ngModel)]="newCategory" placeholder="Add category"
-                 class="flex-1 rounded-lg border border-slate-200 px-3 py-2">
-          <button class="btn-secondary" type="button" (click)="addCategory()">Add</button>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <span *ngFor="let cat of categories" class="px-3 py-1 rounded-full bg-slate-100 text-sm flex items-center gap-2">
-            {{ cat }}
-            <button type="button" class="text-rose-500" (click)="removeCategory(cat)">×</button>
-          </span>
+        <h3 class="text-lg font-bold text-slate-900 mb-4">Expense Categories</h3>
+        <div class="space-y-3">
+          <!-- Add Category -->
+          <div class="flex gap-2">
+            <input type="text" 
+              [(ngModel)]="newCategory" 
+              placeholder="Enter new category"
+              class="flex-1 rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              (keydown.enter)="addCategory()">
+            <button class="btn-secondary text-sm px-4 py-2.5" type="button" (click)="addCategory()">Add</button>
+          </div>
+
+          <!-- Categories List -->
+          <div class="flex flex-wrap gap-2 p-4 bg-slate-50 rounded-lg border border-slate-100">
+            <span *ngFor="let cat of categories" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-sm font-medium text-slate-700 hover:border-slate-300 transition">
+              {{ cat }}
+              <button type="button" class="text-rose-500 hover:text-rose-700 font-bold text-lg leading-none -mr-1" (click)="removeCategory(cat)" title="Remove">×</button>
+            </span>
+            <span *ngIf="categories.length === 0" class="text-sm text-slate-400 italic py-2">No categories yet. Add one above.</span>
+          </div>
         </div>
       </div>
+
+      <!-- Cost Centers -->
       <div>
-        <p class="text-sm font-semibold text-slate-600 mb-2">Cost Centers</p>
-        <div class="flex gap-2 mb-3">
-          <input type="text" [(ngModel)]="newCostCenter" placeholder="Add cost center"
-                 class="flex-1 rounded-lg border border-slate-200 px-3 py-2">
-          <button class="btn-secondary" type="button" (click)="addCostCenter()">Add</button>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <span *ngFor="let cc of costCenters" class="px-3 py-1 rounded-full bg-slate-100 text-sm flex items-center gap-2">
-            {{ cc }}
-            <button type="button" class="text-rose-500" (click)="removeCostCenter(cc)">×</button>
-          </span>
+        <h3 class="text-lg font-bold text-slate-900 mb-4">Cost Centers</h3>
+        <div class="space-y-3">
+          <!-- Add Cost Center -->
+          <div class="flex gap-2">
+            <input type="text" 
+              [(ngModel)]="newCostCenter" 
+              placeholder="Enter new cost center"
+              class="flex-1 rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              (keydown.enter)="addCostCenter()">
+            <button class="btn-secondary text-sm px-4 py-2.5" type="button" (click)="addCostCenter()">Add</button>
+          </div>
+
+          <!-- Cost Centers List -->
+          <div class="flex flex-wrap gap-2 p-4 bg-slate-50 rounded-lg border border-slate-100">
+            <span *ngFor="let cc of costCenters" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-sm font-medium text-slate-700 hover:border-slate-300 transition">
+              {{ cc }}
+              <button type="button" class="text-rose-500 hover:text-rose-700 font-bold text-lg leading-none -mr-1" (click)="removeCostCenter(cc)" title="Remove">×</button>
+            </span>
+            <span *ngIf="costCenters.length === 0" class="text-sm text-slate-400 italic py-2">No cost centers yet. Add one above.</span>
+          </div>
         </div>
       </div>
     </div>
-    <div class="mt-4 flex justify-end">
-      <button class="btn-primary" type="button" (click)="saveSettings()">Save Settings</button>
+
+    <!-- Save Button -->
+    <div class="mt-8 flex justify-end">
+      <button class="btn-primary px-6 py-2.5" type="button" (click)="saveSettings()">
+        <span class="mr-2">✓</span> Save Settings
+      </button>
     </div>
   </section>
 </div>

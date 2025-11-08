@@ -3,23 +3,205 @@
 @tailwind utilities;
 
 :root {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: #0f172a;
+  --color-primary: #3b82f6;
+}
+
+* {
+  @apply scroll-smooth;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
+/* Card Component */
 .card {
-  @apply bg-white rounded-xl shadow border border-slate-100;
+  @apply bg-white rounded-lg shadow border border-slate-100 transition-all duration-200;
 }
 
+.card:hover {
+  @apply shadow-md border-slate-200;
+}
+
+/* Primary Button */
 .btn-primary {
-  @apply inline-flex items-center justify-center rounded-lg bg-brand-500 px-4 py-2 text-white font-semibold transition hover:bg-brand-600 disabled:opacity-50;
+  @apply inline-flex items-center justify-center rounded-lg bg-blue-500 px-4 py-2 text-white font-semibold transition-all duration-200;
+  @apply hover:bg-blue-600 hover:shadow-md active:scale-95;
+  @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-500 disabled:hover:shadow-none;
 }
 
+/* Secondary Button */
 .btn-secondary {
-  @apply inline-flex items-center justify-center rounded-lg border border-slate-200 px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100;
+  @apply inline-flex items-center justify-center rounded-lg border border-slate-200 px-4 py-2 font-semibold text-slate-700 transition-all duration-200;
+  @apply hover:bg-slate-50 hover:border-slate-300 active:scale-95;
+  @apply disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+/* Form Inputs */
+.form-input {
+  @apply rounded-lg border border-slate-200 px-4 py-2.5 text-slate-900 placeholder-slate-400;
+  @apply transition-all duration-200;
+  @apply focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20;
+}
+
+select.form-input {
+  @apply appearance-none bg-white pr-10 cursor-pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+textarea.form-input {
+  @apply resize-y;
+}
+
+/* File Input Styling */
+input[type="file"] {
+  @apply text-sm text-slate-600;
+}
+
+input[type="file"]::file-selector-button {
+  @apply px-3 py-1.5 rounded-md border-0 text-xs font-semibold bg-slate-100 text-slate-700;
+  @apply hover:bg-slate-200 cursor-pointer transition-colors;
+  margin-right: 0.75rem;
+}
+
+/* Table Styling */
+table {
+  @apply w-full text-sm;
+}
+
+thead {
+  @apply bg-slate-50;
+}
+
+thead th {
+  @apply px-6 py-3 font-semibold text-slate-700 text-left;
+}
+
+tbody td {
+  @apply px-6 py-3;
+}
+
+tbody tr {
+  @apply border-b border-slate-100 transition-colors;
+}
+
+tbody tr:hover {
+  @apply bg-slate-50;
+}
+
+/* Badges & Tags */
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
+
+.badge-success {
+  @apply bg-emerald-100 text-emerald-700;
+}
+
+.badge-warning {
+  @apply bg-amber-100 text-amber-700;
+}
+
+.badge-danger {
+  @apply bg-rose-100 text-rose-700;
+}
+
+.badge-info {
+  @apply bg-blue-100 text-blue-700;
+}
+
+/* Status Badge */
+.status-draft {
+  @apply bg-slate-100 text-slate-700;
+}
+
+.status-submitted {
+  @apply bg-amber-100 text-amber-700;
+}
+
+.status-approved {
+  @apply bg-emerald-100 text-emerald-700;
+}
+
+.status-returned {
+  @apply bg-rose-100 text-rose-700;
+}
+
+.status-paid {
+  @apply bg-blue-100 text-blue-700;
+}
+
+/* Alert Boxes */
+.alert {
+  @apply px-4 py-3 rounded-lg text-sm font-medium;
+}
+
+.alert-success {
+  @apply bg-emerald-50 text-emerald-800 border border-emerald-200;
+}
+
+.alert-error {
+  @apply bg-rose-50 text-rose-800 border border-rose-200;
+}
+
+.alert-warning {
+  @apply bg-amber-50 text-amber-800 border border-amber-200;
+}
+
+.alert-info {
+  @apply bg-blue-50 text-blue-800 border border-blue-200;
+}
+
+/* Animations */
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out;
+}
+
+/* Responsive Typography */
+@media (max-width: 640px) {
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+  h3 {
+    @apply text-lg;
+  }
+}
+
+/* Utility Classes */
+.text-truncate {
+  @apply truncate;
+}
+
+/* Focus Visible for Accessibility */
+@layer components {
+  .btn-primary:focus-visible,
+  .btn-secondary:focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-blue-500;
+  }
+
+  .form-input:focus-visible {
+    @apply outline-none;
+  }
 }

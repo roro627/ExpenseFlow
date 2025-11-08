@@ -1,10 +1,53 @@
-<div class="grid md:grid-cols-3 gap-4">
-  <div *ngFor="let role of roles" class="card p-6 flex flex-col gap-4">
-    <div>
-      <p class="text-sm uppercase tracking-wide text-slate-400">{{ role.helper }}</p>
-      <h2 class="text-xl font-semibold text-slate-900">{{ labels[role.key] }}</h2>
-      <p class="text-slate-600 mt-2">{{ role.description }}</p>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+  <div class="w-full max-w-4xl">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-3">Welcome to ExpenseFlow</h1>
+      <p class="text-lg text-slate-600">Choose your role to get started</p>
     </div>
-    <button class="btn-primary" type="button" (click)="choose(role.key)">Continue as {{ labels[role.key] }}</button>
+
+    <!-- Role Cards Grid -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let role of roles" 
+        class="card p-8 flex flex-col gap-6 hover:shadow-lg transition-all duration-300 cursor-pointer group"
+        (click)="choose(role.key)"
+        role="button"
+        tabindex="0"
+        (keydown.enter)="choose(role.key)"
+        (keydown.space)="choose(role.key)">
+        
+        <!-- Icon Background -->
+        <div class="h-16 w-16 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center text-2xl font-bold text-blue-600 group-hover:scale-110 transition-transform">
+          {{ labels[role.key].charAt(0).toUpperCase() }}
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1">
+          <p class="text-xs font-semibold text-blue-600 uppercase tracking-widest mb-2">{{ role.helper }}</p>
+          <h2 class="text-2xl font-bold text-slate-900 mb-3">{{ labels[role.key] }}</h2>
+          <p class="text-slate-600 leading-relaxed">{{ role.description }}</p>
+        </div>
+
+        <!-- Button -->
+        <button 
+          class="btn-primary w-full mt-2"
+          type="button" 
+          (click)="choose(role.key)">
+          Continue as {{ labels[role.key] }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Features Info -->
+    <div class="mt-16 grid sm:grid-cols-2 gap-6">
+      <div class="bg-white rounded-lg p-6 border border-slate-100">
+        <h3 class="font-semibold text-slate-900 mb-2">🎯 Simple & Fast</h3>
+        <p class="text-sm text-slate-600">Streamlined workflow for expense management</p>
+      </div>
+      <div class="bg-white rounded-lg p-6 border border-slate-100">
+        <h3 class="font-semibold text-slate-900 mb-2">🔒 Secure</h3>
+        <p class="text-sm text-slate-600">Your financial data is protected and encrypted</p>
+      </div>
+    </div>
   </div>
 </div>
