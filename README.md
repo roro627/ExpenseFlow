@@ -73,6 +73,18 @@ Frontend production build proxies `/api` to the backend via Nginx (`frontend/ngi
 - Backend:
   - RESTful API with pagination/filtering, DTO validation, CSV export, file upload/download endpoints, and Postgres persistence via Flyway schema.
 
+## UI Preview
+
+Below are full-page screenshots captured at 1920×1080 to give a quick glimpse of each role experience.
+
+| Role Selector | Employee Dashboard |
+| --- | --- |
+| ![](render/role.png) | ![](render/employee.png) |
+
+| Manager Dashboard | Finance Dashboard |
+| --- | --- |
+| ![](render/manager.png) | ![](render/finance.png) |
+
 ## Testing & caveats
 
 - Automated tests were not executed in this environment (offline restrictions). Maven/Angular test targets are configured and can be run locally once dependencies are installed (`mvn test`, `npm test`).
